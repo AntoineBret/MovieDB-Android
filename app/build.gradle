@@ -16,14 +16,33 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable false
+            buildConfigField "boolean", "WITH_LOGS", "false"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            buildConfigField "boolean", "WITH_LOGS", "true"
+        }
+    }
+    flavorDimensions "networkEnv"
+    productFlavors {
+        stub {
+            applicationId "com.hadeso.moviedb.stub"
+            buildConfigField "String", "GATEWAY_BASE_ENDPOINT", "\"https://api.themoviedb.org/3/\""
+            dimension = "networkEnv"
+        }
+        dev {
+            applicationId "com.hadeso.moviedb"
+            buildConfigField "String", "GATEWAY_BASE_ENDPOINT", "\"https://api.themoviedb.org/3/\""
+            dimension = "networkEnv"
         }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:26.1.0'
@@ -37,6 +56,19 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+
+    // RxJava & RxAndroid
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
+
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"
+
+    // Moshi
+    implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.5.0'
 
     // Dagger
     def daggerVersion = '2.12'

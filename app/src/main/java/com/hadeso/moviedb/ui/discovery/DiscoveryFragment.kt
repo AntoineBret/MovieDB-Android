@@ -39,13 +39,14 @@ class DiscoveryFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
+        viewModel.init()
     }
 
     fun intents(): Observable<DiscoveryIntent> {
         return Observable.just(DiscoveryIntent.MovieSelected(""))
     }
 
-    fun render(state: MainViewState) {
+    fun render(state: DiscoveryViewState) {
 
     }
 

@@ -17,7 +17,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(DiscoveryViewModel::class)
-    abstract fun bindUserViewModel(userViewModel: DiscoveryViewModel): ViewModel
+    abstract fun bindDiscoveryViewModel(discoveryViewModel: DiscoveryViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: MovieDBViewModelFactory): ViewModelProvider.Factory
