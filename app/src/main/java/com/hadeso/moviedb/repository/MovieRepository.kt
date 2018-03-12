@@ -1,9 +1,8 @@
 package com.hadeso.moviedb.repository
 
 import com.hadeso.moviedb.api.MovieDBService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
+import com.hadeso.moviedb.model.MovieModel
+import io.reactivex.Observable
 import javax.inject.Inject
 
 /**
@@ -11,15 +10,8 @@ import javax.inject.Inject
  */
 class MovieRepository @Inject constructor(val movieDBService: MovieDBService) {
 
-    fun getDiscoveryMovies() {
-
-        movieDBService.discover()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ model ->
-
-                }) { throwable ->
-                    Timber.e(throwable.message)
-                }
+    fun getDiscoveryMovies(): Observable<MovieModel> {
+        return movieDBService.discover()
+                .flatMapObservable { model -> Observable.fromIterable(model.results) }
     }
 }
