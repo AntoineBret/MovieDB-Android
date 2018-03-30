@@ -27,5 +27,5 @@ data class MovieModel(
         @Json(name = "production_companies") val productionCompanies: List<ProductionCompaniesModel>?,
         @Json(name = "release_date") val releaseDate: String = "",
         @Json(name = "vote_average") val voteAverage: Double = 0.0,
-        @Json(name = "belongs_to_collection") val belongsToCollection: BelongsToCollectionModel
+        @Json(name = "belongs_to_collection") val belongsToCollection: BelongsToCollectionModel?
 )

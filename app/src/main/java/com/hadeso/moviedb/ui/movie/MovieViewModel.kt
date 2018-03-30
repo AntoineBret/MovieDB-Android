@@ -1,6 +1,8 @@
 package com.hadeso.moviedb.ui.movie
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.hadeso.moviedb.model.MovieModel
 import com.hadeso.moviedb.repository.MovieRepository
 import com.hadeso.moviedb.ui.discovery.DiscoveryViewItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,16 +12,21 @@ import javax.inject.Inject
 
 class MovieViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
-    fun init(movie: DiscoveryViewItem) {
-        movieRepository.getMovie(movie.id)
+    private val movie: MutableLiveData<MovieModel> = MutableLiveData()
 
+    fun init(discoveryMovie: DiscoveryViewItem) {
+        movieRepository.getMovie(discoveryMovie.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ views ->
-
+                .subscribe({ movie ->
+                    this.movie.value = movie
                 }) { throwable ->
                     Timber.e(throwable.message)
                 }
+    }
+
+    fun getMovie(): MutableLiveData<MovieModel> {
+        return movie
     }
 
 }

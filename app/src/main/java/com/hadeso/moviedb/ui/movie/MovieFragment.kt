@@ -1,5 +1,6 @@
 package com.hadeso.moviedb.ui.movie
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
+import com.hadeso.moviedb.model.MovieModel
 import com.hadeso.moviedb.ui.discovery.DiscoveryViewItem
 import kotlinx.android.synthetic.main.fragment_movie.*
 import javax.inject.Inject
@@ -56,26 +58,35 @@ class MovieFragment : Fragment(), Injectable {
 
         val movie: DiscoveryViewItem? = arguments?.getParcelable(KEY_MOVIE)
 
-        if (movie != null) {
-            moviePoster.transitionName = movie.id.toString()
-            movieTitle.text = movie.title
-            movieDescription.text = movie.overview
-            Glide.with(context!!)
-                    .load("https://image.tmdb.org/t/p/w154" + movie.posterUrl)
-                    .apply(RequestOptions.fitCenterTransform())
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                            startPostponedEnterTransition()
-                            return false
-                        }
+        moviePoster.transitionName = movie!!.id.toString()
+        movieTitle.text = movie.title
+        movieDescription.text = movie.overview
+        Glide.with(context!!)
+                .load("https://image.tmdb.org/t/p/w154" + movie.posterUrl)
+                .apply(RequestOptions.fitCenterTransform())
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
 
-                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                            startPostponedEnterTransition()
-                            return false
-                        }
-                    })
-                    .into(moviePoster)
-            viewModel.init(movie)
-        }
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+                })
+                .into(moviePoster)
+        viewModel.init(movie)
+        initLiveData()
+
     }
+
+    private fun initLiveData() {
+        viewModel.getMovie().observe(this, Observer<MovieModel> { movie ->
+            Glide.with(context!!)
+                    .load("https://image.tmdb.org/t/p/w780" + movie!!.backdropPath)
+                    .into(movieBackdrop)
+        })
+    }
+
 }
