@@ -7,9 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 
-/**
- * Created by 77796 on 07-Mar-18.
- */
 const val API_KEY = "f161afbc1f127b633c7c59bdc5e7a6a0"
 const val API_QUERY = "?api_key="
 

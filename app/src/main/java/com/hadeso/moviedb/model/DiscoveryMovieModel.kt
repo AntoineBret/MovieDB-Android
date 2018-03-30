@@ -4,9 +4,6 @@ import android.os.Parcelable
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
-/**
- * Created by 77796 on 07-Mar-18.
- */
 @Parcelize
 data class DiscoveryMovieModel(
         val id: Int,

@@ -14,13 +14,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-/**
- * Created by 77796 on 07-Mar-18.
- */
+const val TIMEOUT_SECONDS = 20
+
 @Module
 class NetworkModule {
 
-    val TIMEOUT_SECONDES = 20
 
     @Provides
     @Singleton
@@ -34,9 +32,9 @@ class NetworkModule {
         }
 
         return OkHttpClient.Builder()
-                .connectTimeout(TIMEOUT_SECONDES.toLong(), TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT_SECONDES.toLong(), TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT_SECONDES.toLong(), TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_SECONDS.toLong(), TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SECONDS.toLong(), TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT_SECONDS.toLong(), TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .build()
     }

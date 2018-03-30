@@ -8,9 +8,6 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * Created by 77796 on 12-Mar-18.
- */
 class MovieViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     fun init(movie: DiscoveryViewItem) {

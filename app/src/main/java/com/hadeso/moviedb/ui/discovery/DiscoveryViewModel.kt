@@ -9,9 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * Created by 77796 on 21-Dec-17.
- */
 class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val movies: MutableLiveData<List<DiscoveryViewItem>> = MutableLiveData()

@@ -21,9 +21,6 @@ import com.hadeso.moviedb.ui.discovery.DiscoveryViewItem
 import kotlinx.android.synthetic.main.fragment_movie.*
 import javax.inject.Inject
 
-/**
- * Created by 77796 on 12-Mar-18.
- */
 const val KEY_MOVIE = "MOVIE"
 
 class MovieFragment : Fragment(), Injectable {

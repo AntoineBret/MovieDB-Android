@@ -7,9 +7,6 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
-/**
- * Created by 77796 on 05-Mar-18.
- */
 @Singleton
 @Component(modules = arrayOf(
         AndroidInjectionModule::class,

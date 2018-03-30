@@ -20,9 +20,6 @@ import com.hadeso.moviedb.utils.AutoClearedValue
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
-/**
- * Created by 77796 on 21-Dec-17.
- */
 class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
 
     companion object {

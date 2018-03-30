@@ -9,9 +9,6 @@ import com.hadeso.moviedb.R
 import com.hadeso.moviedb.utils.inflate
 import kotlinx.android.synthetic.main.view_discovery_movie.view.*
 
-/**
- * Created by 77796 on 12-Mar-18.
- */
 class DiscoveryAdapter(private var discoveryViewItems: List<DiscoveryViewItem>,
                        val actions: OnMovieSelectedListener)
     : RecyclerView.Adapter<DiscoveryAdapter.DiscoveryViewHolder>() {

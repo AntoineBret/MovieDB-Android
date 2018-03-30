@@ -4,9 +4,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 
 /**
- * Created by 77796 on 12-Mar-18.
- */
-/**
  * A value holder that automatically clears the reference if the Fragment's view is destroyed.
  * @param <T>
 </T> */

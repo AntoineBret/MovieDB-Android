@@ -8,9 +8,6 @@ import dagger.android.HasActivityInjector
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * Created by 77796 on 05-Mar-18.
- */
 class MovieDBApp : Application(), HasActivityInjector {
 
     @Inject

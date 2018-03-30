@@ -11,9 +11,6 @@ import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 
-/**
- * Created by 77796 on 06-Mar-18.
- */
 class AppInjector {
 
     companion object {
