@@ -1,5 +1,8 @@
 package com.hadeso.moviedb.ui.discovery
 
-sealed class DiscoveryIntent {
-    class MovieSelected(val movieId: String) : DiscoveryIntent()
+import com.hadeso.moviedb.mvibase.MviIntent
+
+sealed class DiscoveryIntent : MviIntent {
+    object InitialIntent : DiscoveryIntent()
+    class MovieSelected(val discoveryViewItem: DiscoveryViewItem) : DiscoveryIntent()
 }

@@ -6,21 +6,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.transition.Fade
-import android.transition.TransitionInflater
-import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
+import com.hadeso.moviedb.mvibase.MviView
 import com.hadeso.moviedb.ui.movie.MovieFragment
 import com.hadeso.moviedb.utils.AutoClearedValue
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
-class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
+class DiscoveryFragment : Fragment(),
+        Injectable,
+        MviView<DiscoveryIntent, DiscoveryViewState>,
+        DiscoveryAdapter.OnMovieSelectedListener {
 
     companion object {
         fun newInstance(): Fragment {
@@ -30,9 +33,7 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private lateinit var viewModel: DiscoveryViewModel
-
     private lateinit var adapter: AutoClearedValue<DiscoveryAdapter>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,31 +45,37 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
 
         initRecyclerView(emptyList())
-        initLiveData()
+        bind()
+    }
+
+    override fun intents(): Observable<DiscoveryIntent> {
+        return Observable.merge(
+                initialIntent(),
+                movieSelectedIntent())
+    }
+
+    override fun render(state: DiscoveryViewState) {
+        updateMovies(state.movies)
     }
 
     override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
-
-
         val nextFragment = MovieFragment.newInstance(movie)
-
         val fragmentTransaction = fragmentManager?.beginTransaction()
-
-
         fragmentTransaction?.addSharedElement(sharedElement, sharedElement.transitionName)
                 ?.replace(R.id.container, nextFragment)
                 ?.addToBackStack(null)
                 ?.commit()
     }
 
-    private fun initLiveData() {
-        viewModel.getMovies().observe(this, Observer<List<DiscoveryViewItem>> { movies ->
-            updateMovies(movies!!)
+    private fun bind() {
+        viewModel.states().observe(this, Observer<DiscoveryViewState> { viewState ->
+            render(viewState!!)
         })
+        viewModel.processIntents(intents())
     }
 
     private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
-        val movieAdapter = DiscoveryAdapter(movies, this)
+        val movieAdapter = DiscoveryAdapter(movies)
         discoveryRecyclerView.adapter = movieAdapter
         discoveryRecyclerView.apply {
             setHasFixedSize(true)
@@ -83,4 +90,12 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
         adapter.get()?.notifyDataSetChanged()
     }
 
+    private fun initialIntent(): Observable<DiscoveryIntent.InitialIntent> {
+        return Observable.just(DiscoveryIntent.InitialIntent)
+    }
+
+    private fun movieSelectedIntent(): Observable<DiscoveryIntent.MovieSelected> {
+        return adapter.get()!!.taskClickObservable
+                .map { DiscoveryIntent.MovieSelected(it) }
+    }
 }

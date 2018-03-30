@@ -1,41 +1,47 @@
 package com.hadeso.moviedb.ui.discovery
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.hadeso.moviedb.model.DiscoveryMovieModel
-import com.hadeso.moviedb.repository.MovieRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
+import com.hadeso.moviedb.mvibase.MviViewModel
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
-class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DiscoveryViewModel @Inject constructor(
+        private val actionProcessorHolder: DiscoveryActionProcessorHolder,
+        private val reducer: DiscoveryReducer)
+    : ViewModel(), MviViewModel<DiscoveryIntent, DiscoveryViewState> {
 
-    private val movies: MutableLiveData<List<DiscoveryViewItem>> = MutableLiveData()
+    private val intentsSubject: PublishSubject<DiscoveryIntent> = PublishSubject.create()
+    private val viewState: MutableLiveData<DiscoveryViewState> = MutableLiveData()
+    private val statesObservable: Observable<DiscoveryViewState> = compose()
 
-    init {
-        movieRepository.getDiscoveryMovies()
-                .map { model -> modelToView(model) }
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ views ->
-                    movies.value = views
-                }) { throwable ->
-                    Timber.e(throwable.message)
-                }
+    override fun processIntents(intents: Observable<DiscoveryIntent>) {
+        statesObservable.subscribe({ state ->
+            viewState.value = state
+        })
+        intents.subscribe(intentsSubject)
     }
 
-    fun getMovies(): MutableLiveData<List<DiscoveryViewItem>> {
-        return movies
+    override fun states(): LiveData<DiscoveryViewState> {
+        return viewState
     }
 
-    private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
-        return DiscoveryViewItem(discoveryMovieModel.id,
-                discoveryMovieModel.title,
-                discoveryMovieModel.posterPath,
-                discoveryMovieModel.overview,
-                discoveryMovieModel.voteAverage.toString())
+    private fun compose(): Observable<DiscoveryViewState> {
+        return intentsSubject
+                .map(this::actionFromIntent)
+                .compose(actionProcessorHolder.actionProcessor)
+                .compose(reducer.reducer)
+                .replay(1)
+                .autoConnect(0)
     }
 
+    private fun actionFromIntent(intent: DiscoveryIntent): DiscoveryAction {
+        return when (intent) {
+            is DiscoveryIntent.InitialIntent -> DiscoveryAction.LoadDiscoveryAction
+            is DiscoveryIntent.MovieSelected -> DiscoveryAction.GoToMovieDetailAction(intent.discoveryViewItem)
+
+        }
+    }
 }
