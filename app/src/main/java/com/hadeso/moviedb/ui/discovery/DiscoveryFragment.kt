@@ -6,19 +6,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.transition.Fade
+import android.transition.TransitionInflater
+import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
+import com.hadeso.moviedb.ui.movie.MovieFragment
 import com.hadeso.moviedb.utils.AutoClearedValue
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
 /**
  * Created by 77796 on 21-Dec-17.
  */
-class DiscoveryFragment : Fragment(), Injectable {
+class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
 
     companion object {
         fun newInstance(): Fragment {
@@ -34,17 +39,29 @@ class DiscoveryFragment : Fragment(), Injectable {
     private lateinit var adapter: AutoClearedValue<DiscoveryAdapter>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_discovery, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
-        viewModel.init()
 
         initRecyclerView(emptyList())
         initLiveData()
+    }
+
+    override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
+
+
+        val nextFragment = MovieFragment.newInstance(movie)
+
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+
+
+        fragmentTransaction?.addSharedElement(sharedElement, sharedElement.transitionName)
+                ?.replace(R.id.container, nextFragment)
+                ?.addToBackStack(null)
+                ?.commit()
     }
 
     private fun initLiveData() {
@@ -54,7 +71,7 @@ class DiscoveryFragment : Fragment(), Injectable {
     }
 
     private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
-        val movieAdapter = DiscoveryAdapter(movies)
+        val movieAdapter = DiscoveryAdapter(movies, this)
         discoveryRecyclerView.adapter = movieAdapter
         discoveryRecyclerView.apply {
             setHasFixedSize(true)

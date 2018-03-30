@@ -2,7 +2,7 @@ package com.hadeso.moviedb.ui.discovery
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.hadeso.moviedb.model.MovieModel
+import com.hadeso.moviedb.model.DiscoveryMovieModel
 import com.hadeso.moviedb.repository.MovieRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -12,15 +12,16 @@ import javax.inject.Inject
 /**
  * Created by 77796 on 21-Dec-17.
  */
-class DiscoveryViewModel @Inject constructor(val movieRepository: MovieRepository) : ViewModel() {
+class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val movies: MutableLiveData<List<DiscoveryViewItem>> = MutableLiveData()
 
-    fun init() {
-        movieRepository.getDiscoveryMovies().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    init {
+        movieRepository.getDiscoveryMovies()
                 .map { model -> modelToView(model) }
                 .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ views ->
                     movies.value = views
                 }) { throwable ->
@@ -32,12 +33,12 @@ class DiscoveryViewModel @Inject constructor(val movieRepository: MovieRepositor
         return movies
     }
 
-    private fun modelToView(movieModel: MovieModel): DiscoveryViewItem {
-        return DiscoveryViewItem(movieModel.id,
-                movieModel.title,
-                movieModel.posterPath,
-                movieModel.overview,
-                movieModel.voteAverage.toString())
+    private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
+        return DiscoveryViewItem(discoveryMovieModel.id,
+                discoveryMovieModel.title,
+                discoveryMovieModel.posterPath,
+                discoveryMovieModel.overview,
+                discoveryMovieModel.voteAverage.toString())
     }
 
 }

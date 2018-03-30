@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val discoveryFragment = DiscoveryFragment.newInstance()
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, discoveryFragment)
-                .commit()
+        if (savedInstanceState == null) {
+            val discoveryFragment = DiscoveryFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, discoveryFragment)
+                    .commit()
+        }
     }
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
