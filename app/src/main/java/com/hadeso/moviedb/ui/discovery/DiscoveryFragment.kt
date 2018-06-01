@@ -16,7 +16,6 @@ import com.hadeso.moviedb.mvibase.MviView
 import com.hadeso.moviedb.ui.movie.MovieFragment
 import com.hadeso.moviedb.utils.AutoClearedValue
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
@@ -48,10 +47,13 @@ class DiscoveryFragment : Fragment(),
         bind()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.states().removeObservers(this)
+    }
+
     override fun intents(): Observable<DiscoveryIntent> {
-        return Observable.merge(
-                initialIntent(),
-                movieSelectedIntent())
+        return initialIntent()
     }
 
     override fun render(state: DiscoveryViewState) {
@@ -75,7 +77,7 @@ class DiscoveryFragment : Fragment(),
     }
 
     private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
-        val movieAdapter = DiscoveryAdapter(movies)
+        val movieAdapter = DiscoveryAdapter(movies, this)
         discoveryRecyclerView.adapter = movieAdapter
         discoveryRecyclerView.apply {
             setHasFixedSize(true)
@@ -90,12 +92,7 @@ class DiscoveryFragment : Fragment(),
         adapter.get()?.notifyDataSetChanged()
     }
 
-    private fun initialIntent(): Observable<DiscoveryIntent.InitialIntent> {
+    private fun initialIntent(): Observable<DiscoveryIntent> {
         return Observable.just(DiscoveryIntent.InitialIntent)
-    }
-
-    private fun movieSelectedIntent(): Observable<DiscoveryIntent.MovieSelected> {
-        return adapter.get()!!.taskClickObservable
-                .map { DiscoveryIntent.MovieSelected(it) }
     }
 }

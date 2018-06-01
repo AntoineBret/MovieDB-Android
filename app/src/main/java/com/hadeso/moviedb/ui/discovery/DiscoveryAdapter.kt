@@ -7,17 +7,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions.fitCenterTransform
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.utils.inflate
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_discovery_movie.view.*
 
-class DiscoveryAdapter(private var discoveryViewItems: List<DiscoveryViewItem>)
+class DiscoveryAdapter(private var discoveryViewItems: List<DiscoveryViewItem>, private val movieListener: OnMovieSelectedListener)
     : RecyclerView.Adapter<DiscoveryAdapter.DiscoveryViewHolder>() {
-
-    private val taskClickSubject = PublishSubject.create<DiscoveryViewItem>()
-
-    val taskClickObservable: Observable<DiscoveryViewItem>
-        get() = taskClickSubject
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveryViewHolder {
         return DiscoveryViewHolder(parent)
@@ -44,7 +37,7 @@ class DiscoveryAdapter(private var discoveryViewItems: List<DiscoveryViewItem>)
             parent.inflate(R.layout.view_discovery_movie)) {
 
         fun bind(viewItem: DiscoveryViewItem) {
-            itemView.setOnClickListener { taskClickSubject.onNext(viewItem) }
+            itemView.setOnClickListener { movieListener.onMovieSelected(viewItem, itemView.moviePoster) }
             itemView.movieTitle.text = viewItem.title
             itemView.movieOverview.text = viewItem.overview
             itemView.moviePoster.transitionName = viewItem.id.toString()

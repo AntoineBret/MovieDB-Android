@@ -42,28 +42,20 @@ class DiscoveryViewModel @Inject constructor(
     private fun actionFromIntent(intent: DiscoveryIntent): DiscoveryAction {
         return when (intent) {
             is DiscoveryIntent.InitialIntent -> DiscoveryAction.LoadDiscoveryAction
-            is DiscoveryIntent.MovieSelected -> DiscoveryAction.GoToMovieDetailAction(intent.discoveryViewItem)
-
         }
     }
 
     companion object {
         private val reducer = BiFunction { previousState: DiscoveryViewState, result: DiscoveryResult ->
-        when (result) {
-            is DiscoveryResult.LoadDiscoveryMoviesResult.Success ->
-        previousState.copy(isLoading = false,
-                error = null,
-                movies = result.movies.results.map { modelToView(it) })
-            is DiscoveryResult.LoadDiscoveryMoviesResult.Failure ->
-                previousState.copy(isLoading = false, error = result.error)
-            is DiscoveryResult.GotoMovieResult.Success ->
-                previousState.copy(isLoading = false,
-                        error = null,
-                        movies = result.movies.results.map { modelToView(it) })
-            is DiscoveryResult.GotoMovieResult.Failure ->
-                previousState.copy(isLoading = false, error = result.error)
+            when (result) {
+                is DiscoveryResult.LoadDiscoveryMoviesResult.Success ->
+                    previousState.copy(isLoading = false,
+                            error = null,
+                            movies = result.movies.results.map { modelToView(it) })
+                is DiscoveryResult.LoadDiscoveryMoviesResult.Failure ->
+                    previousState.copy(isLoading = false, error = result.error)
+            }
         }
-    }
 
 
         private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {

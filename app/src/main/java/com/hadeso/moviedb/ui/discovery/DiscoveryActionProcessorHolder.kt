@@ -1,7 +1,6 @@
 package com.hadeso.moviedb.ui.discovery
 
 import com.hadeso.moviedb.repository.MovieRepository
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -29,10 +28,7 @@ class DiscoveryActionProcessorHolder @Inject constructor(private val movieReposi
     internal var actionProcessor =
             ObservableTransformer<DiscoveryAction, DiscoveryResult> { actions ->
                 actions.publish { shared ->
-                    Observable.merge(
-                            shared.ofType(DiscoveryAction.LoadDiscoveryAction::class.java).compose(loadDiscoveryMoviesProcessor),
-                            shared.ofType(DiscoveryAction.GoToMovieDetailAction::class.java).compose(loadDiscoveryMoviesProcessor)
-                    )
+                    shared.ofType(DiscoveryAction.LoadDiscoveryAction::class.java).compose(loadDiscoveryMoviesProcessor)
                 }
             }
 }

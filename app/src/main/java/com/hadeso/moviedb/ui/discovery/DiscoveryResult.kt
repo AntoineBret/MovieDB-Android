@@ -8,9 +8,4 @@ sealed class DiscoveryResult : MviResult {
         data class Success(val movies: DiscoveryListModel) : LoadDiscoveryMoviesResult()
         data class Failure(val error: Throwable) : LoadDiscoveryMoviesResult()
     }
-
-    sealed class GotoMovieResult : DiscoveryResult() {
-        data class Success(val movies: DiscoveryListModel) : GotoMovieResult()
-        data class Failure(val error: Throwable) : GotoMovieResult()
-    }
 }
