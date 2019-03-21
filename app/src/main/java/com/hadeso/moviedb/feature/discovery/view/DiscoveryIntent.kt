@@ -4,5 +4,5 @@ import com.hadeso.moviedb.architecture.base.Intent
 
 sealed class DiscoveryIntent : Intent {
     object Initial : DiscoveryIntent()
-    data class MovieSelected(val viewItem: DiscoveryViewItem) : DiscoveryIntent()
+    data class MovieSelected(val movieId: Int) : DiscoveryIntent()
 }

@@ -17,12 +17,12 @@ class DiscoveryUseCase @Inject constructor(private val movieRepository: MovieRep
             Timber.d("Received command : ${command::class.java.simpleName}")
             return@flatMap when (command) {
                 DiscoveryCommand.LoadMovies -> loadMovies()
-                is DiscoveryCommand.GoToDetail -> goToDetails(command.viewItem)
+                is DiscoveryCommand.GoToDetail -> goToDetails(command.movieId)
             }
         }
     }
 
-    private fun goToDetails(viewItem: DiscoveryViewItem): Observable<Action> = Observable.fromCallable { DiscoveryAction.GoToMovie(viewItem) }
+    private fun goToDetails(movieId: Int): Observable<Action> = Observable.fromCallable { DiscoveryAction.GoToMovie(movieId) }
 
     private fun loadMovies(): Observable<Action> {
         return movieRepository.getDiscoveryMovies()

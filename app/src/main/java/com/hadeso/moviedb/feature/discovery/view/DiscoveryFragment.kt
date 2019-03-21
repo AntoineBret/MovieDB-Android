@@ -66,16 +66,16 @@ class DiscoveryFragment : Fragment(), Injectable, BaseView<DiscoveryIntent, Disc
                 showLoading(false)
                 updateList(state.discoveryMovies)
             }
-            is DiscoveryState.MovieNavigation -> goToMovie(state.viewItem)
+            is DiscoveryState.MovieNavigation -> goToMovie(state.movieId)
         }
     }
 
     override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
-        discoveryIntentSubject.onNext(DiscoveryIntent.MovieSelected(movie))
+        discoveryIntentSubject.onNext(DiscoveryIntent.MovieSelected(movie.id))
     }
 
-    private fun goToMovie(movie: DiscoveryViewItem) {
-        val nextFragment = MovieDetailFragment.newInstance(movie)
+    private fun goToMovie(movieId: Int) {
+        val nextFragment = MovieDetailFragment.newInstance(movieId)
 
         val fragmentTransaction = fragmentManager?.beginTransaction()
         fragmentTransaction//?.addSharedElement(sharedElement, sharedElement.transitionName)

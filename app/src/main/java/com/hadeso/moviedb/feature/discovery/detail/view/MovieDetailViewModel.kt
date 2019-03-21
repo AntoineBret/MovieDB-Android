@@ -38,7 +38,7 @@ class MovieDetailViewModel @Inject constructor(private val movieDetailUseCase: M
             .flatMapIterable { intent ->
                 Timber.d("Received intent : ${intent::class.java.simpleName}")
                 return@flatMapIterable when (intent) {
-                    is MovieDetailIntent.Initial -> listOf(MovieDetailCommand.LoadMovieDetail(intent.viewItem.id))
+                    is MovieDetailIntent.Initial -> listOf(MovieDetailCommand.LoadMovieDetail(intent.movieId))
                 }
             }
     }

@@ -7,6 +7,6 @@ import com.hadeso.moviedb.feature.discovery.view.DiscoveryViewItem
 sealed class DiscoveryAction : Action {
     object StartLoad : DiscoveryAction()
     data class UpdateMovies(val discoveryMovies: List<DiscoveryViewItem>) : DiscoveryAction()
-    data class GoToMovie(val viewItem: DiscoveryViewItem) : DiscoveryAction()
+    data class GoToMovie(val movieId: Int) : DiscoveryAction()
     data class Error(val error: DiscoveryError) : DiscoveryAction()
 }

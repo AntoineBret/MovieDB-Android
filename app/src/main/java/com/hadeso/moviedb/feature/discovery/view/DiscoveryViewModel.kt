@@ -42,7 +42,7 @@ class DiscoveryViewModel @Inject constructor(
                 Timber.d("Received intent : ${intent::class.java.simpleName}")
                 return@flatMapIterable when (intent) {
                     DiscoveryIntent.Initial -> listOf(DiscoveryCommand.LoadMovies)
-                    is DiscoveryIntent.MovieSelected -> listOf(DiscoveryCommand.GoToDetail(intent.viewItem))
+                    is DiscoveryIntent.MovieSelected -> listOf(DiscoveryCommand.GoToDetail(intent.movieId))
                 }
             }
     }

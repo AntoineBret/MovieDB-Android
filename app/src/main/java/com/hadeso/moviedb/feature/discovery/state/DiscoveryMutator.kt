@@ -27,7 +27,7 @@ private fun reduceDiscoveryAction(action: DiscoveryAction, previousState: Discov
     return when (action) {
         DiscoveryAction.StartLoad -> DiscoveryState.Loading
         is DiscoveryAction.UpdateMovies -> DiscoveryState.MoviesLoaded(action.discoveryMovies)
-        is DiscoveryAction.GoToMovie -> DiscoveryState.MovieNavigation(action.viewItem)
+        is DiscoveryAction.GoToMovie -> DiscoveryState.MovieNavigation(action.movieId)
         is DiscoveryAction.Error -> DiscoveryState.Error(action.error)
     }
 }

@@ -13,7 +13,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
 import com.hadeso.moviedb.feature.discovery.detail.state.MovieDetailState
-import com.hadeso.moviedb.feature.discovery.view.DiscoveryViewItem
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_movie_detail.movieBackdrop
@@ -25,15 +24,15 @@ import javax.inject.Inject
 import com.hadeso.moviedb.architecture.base.View as BaseView
 
 
-const val KEY_MOVIE = "MOVIE"
+const val KEY_MOVIE_ID = "MOVIE_ID"
 
 class MovieDetailFragment : Fragment(), Injectable, BaseView<MovieDetailIntent, MovieDetailState> {
 
     companion object {
-        fun newInstance(movie: DiscoveryViewItem): Fragment {
+        fun newInstance(movieId: Int): Fragment {
             val bundle = Bundle()
             val fragment = MovieDetailFragment()
-            bundle.putParcelable(KEY_MOVIE, movie)
+            bundle.putInt(KEY_MOVIE_ID, movieId)
             fragment.arguments = bundle
             return fragment
         }
@@ -57,8 +56,8 @@ class MovieDetailFragment : Fragment(), Injectable, BaseView<MovieDetailIntent, 
             })
         }
 
-        val movie: DiscoveryViewItem? = arguments?.getParcelable(KEY_MOVIE)
-        movieDetailIntentSubject.onNext(MovieDetailIntent.Initial(movie!!))
+        val movieId: Int? = arguments?.getInt(KEY_MOVIE_ID)
+        movieDetailIntentSubject.onNext(MovieDetailIntent.Initial(movieId!!))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
