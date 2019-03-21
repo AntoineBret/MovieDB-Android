@@ -1,10 +1,11 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hadeso.moviedb.ui.discovery.DiscoveryViewModel
-import com.hadeso.moviedb.ui.movie.MovieViewModel
-import com.hadeso.moviedb.viewmodel.MovieDBViewModelFactory
+import com.hadeso.moviedb.di.ViewModelKey
+import com.hadeso.moviedb.feature.discovery.view.DiscoveryViewModel
+import com.hadeso.moviedb.feature.discovery.detail.view.MovieViewModel
+import com.hadeso.moviedb.di.MovieDBViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

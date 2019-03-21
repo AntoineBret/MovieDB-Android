@@ -2,6 +2,9 @@ package com.hadeso.moviedb.di
 
 import android.app.Application
 import com.hadeso.moviedb.MovieDBApp
+import com.hadeso.moviedb.di.module.AppModule
+import com.hadeso.moviedb.di.module.MainActivityModule
+import com.hadeso.moviedb.di.module.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule

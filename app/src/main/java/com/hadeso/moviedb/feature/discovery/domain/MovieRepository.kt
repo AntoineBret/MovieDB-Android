@@ -1,6 +1,6 @@
-package com.hadeso.moviedb.repository
+package com.hadeso.moviedb.feature.discovery.domain
 
-import com.hadeso.moviedb.api.MovieDBService
+import com.hadeso.moviedb.service.api.MovieDBService
 import com.hadeso.moviedb.model.DiscoveryMovieModel
 import com.hadeso.moviedb.model.MovieModel
 import io.reactivex.Observable

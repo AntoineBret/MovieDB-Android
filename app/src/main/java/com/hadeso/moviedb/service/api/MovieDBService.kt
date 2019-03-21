@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.api
+package com.hadeso.moviedb.service.api
 
 import com.hadeso.moviedb.model.DiscoveryListModel
 import com.hadeso.moviedb.model.MovieModel

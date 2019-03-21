@@ -1,7 +1,7 @@
 package com.hadeso.moviedb.di
 
 import com.hadeso.moviedb.BuildConfig
-import com.hadeso.moviedb.api.MovieDBService
+import com.hadeso.moviedb.service.api.MovieDBService
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides

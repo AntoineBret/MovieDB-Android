@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.ui.discovery
+package com.hadeso.moviedb.feature.discovery.view
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

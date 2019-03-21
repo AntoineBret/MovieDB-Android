@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.ui.discovery
+package com.hadeso.moviedb.feature.discovery.view
 
 import android.view.ViewGroup
 import android.widget.ImageView

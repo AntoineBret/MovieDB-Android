@@ -1,7 +1,7 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.di.module
 
-import com.hadeso.moviedb.ui.discovery.DiscoveryFragment
-import com.hadeso.moviedb.ui.movie.MovieFragment
+import com.hadeso.moviedb.feature.discovery.view.DiscoveryFragment
+import com.hadeso.moviedb.feature.discovery.detail.view.MovieFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

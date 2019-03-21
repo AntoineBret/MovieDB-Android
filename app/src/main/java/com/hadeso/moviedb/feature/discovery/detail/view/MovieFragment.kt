@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.ui.movie
+package com.hadeso.moviedb.feature.discovery.detail.view
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.Target
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
 import com.hadeso.moviedb.model.MovieModel
-import com.hadeso.moviedb.ui.discovery.DiscoveryViewItem
+import com.hadeso.moviedb.feature.discovery.view.DiscoveryViewItem
 import kotlinx.android.synthetic.main.fragment_movie.movieBackdrop
 import kotlinx.android.synthetic.main.fragment_movie.movieDescription
 import kotlinx.android.synthetic.main.fragment_movie.moviePoster

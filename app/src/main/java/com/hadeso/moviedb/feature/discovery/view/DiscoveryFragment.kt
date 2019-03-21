@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.ui.discovery
+package com.hadeso.moviedb.feature.discovery.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
-import com.hadeso.moviedb.ui.movie.MovieFragment
+import com.hadeso.moviedb.feature.discovery.detail.view.MovieFragment
 import com.hadeso.moviedb.utils.AutoClearedValue
 import kotlinx.android.synthetic.main.fragment_discovery.discoveryRecyclerView
 import javax.inject.Inject

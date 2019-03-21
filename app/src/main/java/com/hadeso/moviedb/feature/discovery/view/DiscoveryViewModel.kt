@@ -1,9 +1,9 @@
-package com.hadeso.moviedb.ui.discovery
+package com.hadeso.moviedb.feature.discovery.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hadeso.moviedb.model.DiscoveryMovieModel
-import com.hadeso.moviedb.repository.MovieRepository
+import com.hadeso.moviedb.feature.discovery.domain.MovieRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -31,11 +31,13 @@ class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieR
     }
 
     private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
-        return DiscoveryViewItem(discoveryMovieModel.id,
-                discoveryMovieModel.title,
-                discoveryMovieModel.posterPath,
-                discoveryMovieModel.overview,
-                discoveryMovieModel.voteAverage.toString())
+        return DiscoveryViewItem(
+            discoveryMovieModel.id,
+            discoveryMovieModel.title,
+            discoveryMovieModel.posterPath,
+            discoveryMovieModel.overview,
+            discoveryMovieModel.voteAverage.toString()
+        )
     }
 
 }
