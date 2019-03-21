@@ -45,11 +45,11 @@ class MovieFragment : Fragment(), Injectable {
 
     private lateinit var viewModel: MovieViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+/*    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = TransitionInflater.from(context)
                 .inflateTransition(android.R.transition.move)
-    }
+    }*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movie, container, false)
@@ -61,11 +61,11 @@ class MovieFragment : Fragment(), Injectable {
 
         val movie: DiscoveryViewItem? = arguments?.getParcelable(KEY_MOVIE)
 
-        moviePoster.transitionName = movie!!.id.toString()
-        movieTitle.text = movie.title
-        movieDescription.text = movie.overview
+        moviePoster.transitionName = movie?.id.toString()
+        movieTitle.text = movie?.title
+        movieDescription.text = movie?.overview
         Glide.with(context!!)
-                .load("https://image.tmdb.org/t/p/w154" + movie.posterUrl)
+                .load("https://image.tmdb.org/t/p/w154" + movie?.posterUrl)
                 .apply(RequestOptions.fitCenterTransform())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
@@ -79,7 +79,7 @@ class MovieFragment : Fragment(), Injectable {
                     }
                 })
                 .into(moviePoster)
-        viewModel.init(movie)
+        viewModel.init(movie!!)
         initLiveData()
 
     }

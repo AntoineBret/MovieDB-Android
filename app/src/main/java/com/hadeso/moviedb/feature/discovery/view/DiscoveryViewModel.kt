@@ -1,43 +1,61 @@
 package com.hadeso.moviedb.feature.discovery.view
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.hadeso.moviedb.model.DiscoveryMovieModel
-import com.hadeso.moviedb.feature.discovery.domain.MovieRepository
+import com.hadeso.moviedb.architecture.Store
+import com.hadeso.moviedb.architecture.base.Action
+import com.hadeso.moviedb.architecture.base.IntentInterpreter
+import com.hadeso.moviedb.core.state.AppState
+import com.hadeso.moviedb.core.view.BaseViewModel
+import com.hadeso.moviedb.feature.discovery.domain.DiscoveryCommand
+import com.hadeso.moviedb.feature.discovery.domain.DiscoveryUseCase
+import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
+import com.hadeso.moviedb.feature.discovery.state.discoveryLens
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DiscoveryViewModel @Inject constructor(
+    private val discoveryUseCase: DiscoveryUseCase,
+    private val store: Store<AppState>
+) : BaseViewModel(),
+    IntentInterpreter<DiscoveryIntent, DiscoveryCommand, DiscoveryState> {
 
-    private val movies: MutableLiveData<List<DiscoveryViewItem>> = MutableLiveData()
+    private val stateLiveData: MutableLiveData<DiscoveryState> = MutableLiveData()
 
-    init {
-        movieRepository.getDiscoveryMovies()
-                .map { model -> modelToView(model) }
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ views ->
-                    movies.value = views
-                }) { throwable ->
-                    Timber.e(throwable.message)
+    override fun processIntents(intentObservable: Observable<DiscoveryIntent>) {
+        interpret(intentObservable)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { state -> stateLiveData.value = state },
+                { throwable -> Timber.d(throwable) }
+            ).addTo(disposable)
+    }
+
+    override fun command(intentObservable: Observable<DiscoveryIntent>): Observable<DiscoveryCommand> {
+        return intentObservable
+            .observeOn(Schedulers.computation())
+            .flatMapIterable { intent ->
+                Timber.d("Received intent : ${intent::class.java.simpleName}")
+                return@flatMapIterable when (intent) {
+                    DiscoveryIntent.Initial -> listOf(DiscoveryCommand.LoadMovies)
+                    is DiscoveryIntent.MovieSelected -> listOf(DiscoveryCommand.GoToDetail(intent.viewItem))
                 }
+            }
     }
 
-    fun getMovies(): MutableLiveData<List<DiscoveryViewItem>> {
-        return movies
+    override fun action(commandObservable: Observable<DiscoveryCommand>): Observable<Action> {
+        return discoveryUseCase.execute(commandObservable)
     }
 
-    private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
-        return DiscoveryViewItem(
-            discoveryMovieModel.id,
-            discoveryMovieModel.title,
-            discoveryMovieModel.posterPath,
-            discoveryMovieModel.overview,
-            discoveryMovieModel.voteAverage.toString()
-        )
+    override fun state(actionObservable: Observable<Action>): Observable<DiscoveryState> {
+        return store.dispatch(actionObservable, discoveryLens::get)
     }
 
+    fun stateLiveData(): LiveData<DiscoveryState> {
+        return stateLiveData
+    }
 }

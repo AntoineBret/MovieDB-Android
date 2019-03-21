@@ -13,11 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
 import com.hadeso.moviedb.feature.discovery.detail.view.MovieFragment
+import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
+import com.hadeso.moviedb.feature.discovery.view.adapter.DiscoveryAdapter
 import com.hadeso.moviedb.utils.AutoClearedValue
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_discovery.discoveryRecyclerView
+import kotlinx.android.synthetic.main.fragment_discovery.progressBar
 import javax.inject.Inject
+import com.hadeso.moviedb.architecture.base.View as BaseView
 
-class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
+class DiscoveryFragment : Fragment(), Injectable, BaseView<DiscoveryIntent, DiscoveryState>, DiscoveryAdapter.OnMovieSelectedListener {
 
     companion object {
         fun newInstance(): Fragment {
@@ -29,8 +35,9 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: DiscoveryViewModel
-
     private lateinit var adapter: AutoClearedValue<DiscoveryAdapter>
+
+    private val discoveryIntentSubject = PublishSubject.create<DiscoveryIntent>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_discovery, container, false)
@@ -38,46 +45,64 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
+        if (!this::viewModel.isInitialized) {
+            viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java).apply {
+                processIntents(intents())
+                stateLiveData().observe(this@DiscoveryFragment, Observer<DiscoveryState> { state ->
+                    render(state)
+                })
+            }
+        }
 
-        initRecyclerView(emptyList())
-        initLiveData()
+        discoveryIntentSubject.onNext(DiscoveryIntent.Initial)
+    }
+
+    override fun intents(): Observable<DiscoveryIntent> = discoveryIntentSubject
+
+    override fun render(state: DiscoveryState) {
+        when (state) {
+            DiscoveryState.Loading -> showLoading(true)
+            is DiscoveryState.MoviesLoaded -> {
+                showLoading(false)
+                updateList(state.discoveryMovies)
+            }
+            is DiscoveryState.MovieNavigation -> goToMovie(state.viewItem)
+        }
     }
 
     override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
+        discoveryIntentSubject.onNext(DiscoveryIntent.MovieSelected(movie))
+    }
 
-
+    private fun goToMovie(movie: DiscoveryViewItem) {
         val nextFragment = MovieFragment.newInstance(movie)
 
         val fragmentTransaction = fragmentManager?.beginTransaction()
-
-
-        fragmentTransaction?.addSharedElement(sharedElement, sharedElement.transitionName)
-                ?.replace(R.id.container, nextFragment)
-                ?.addToBackStack(null)
-                ?.commit()
+        fragmentTransaction//?.addSharedElement(sharedElement, sharedElement.transitionName)
+            ?.replace(R.id.container, nextFragment)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
-    private fun initLiveData() {
-        viewModel.getMovies().observe(this, Observer<List<DiscoveryViewItem>> { movies ->
-            updateMovies(movies!!)
-        })
+    private fun updateList(items: List<DiscoveryViewItem>) {
+        if (!this::adapter.isInitialized || adapter.get() == null) {
+            initRecyclerView()
+        }
+        adapter.get()?.submitList(items)
     }
 
-    private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
-        val movieAdapter = DiscoveryAdapter(movies, this)
-        discoveryRecyclerView.adapter = movieAdapter
+    private fun initRecyclerView() {
+        val discoveryAdapter = DiscoveryAdapter(this)
+        adapter = AutoClearedValue(this, discoveryAdapter)
+        discoveryRecyclerView.adapter = discoveryAdapter
         discoveryRecyclerView.apply {
             setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             layoutManager = linearLayout
         }
-        adapter = AutoClearedValue(this, movieAdapter)
     }
 
-    private fun updateMovies(movies: List<DiscoveryViewItem>) {
-        adapter.get()?.updateMovies(movies)
-        adapter.get()?.notifyDataSetChanged()
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) progressBar.visibility = android.view.View.VISIBLE else progressBar.visibility = android.view.View.GONE
     }
-
 }

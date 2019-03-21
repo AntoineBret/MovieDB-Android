@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.hadeso.moviedb.di.ViewModelKey
 import com.hadeso.moviedb.feature.discovery.view.DiscoveryViewModel
 import com.hadeso.moviedb.feature.discovery.detail.view.MovieViewModel
-import com.hadeso.moviedb.di.MovieDBViewModelFactory
+import com.hadeso.moviedb.core.view.MovieDBViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

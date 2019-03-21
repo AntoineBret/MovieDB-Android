@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.core.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

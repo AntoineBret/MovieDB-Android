@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class MovieRepository @Inject constructor(val movieDBService: MovieDBService) {
+class MovieRepository @Inject constructor(private val movieDBService: MovieDBService) {
 
     fun getDiscoveryMovies(): Observable<DiscoveryMovieModel> {
         return movieDBService.discover()
