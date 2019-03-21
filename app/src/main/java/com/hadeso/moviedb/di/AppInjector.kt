@@ -3,9 +3,9 @@ package com.hadeso.moviedb.di
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.hadeso.moviedb.MovieDBApp
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
@@ -15,8 +15,7 @@ class AppInjector {
 
     companion object {
         fun init(movieDBApp: MovieDBApp) {
-            DaggerAppComponent.builder().application(movieDBApp)
-                    .build().inject(movieDBApp)
+            DaggerAppComponent.builder().application(movieDBApp).build().inject(movieDBApp)
             movieDBApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity?) {
                 }
@@ -48,16 +47,15 @@ class AppInjector {
                 AndroidInjection.inject(activity)
             }
             if (activity is FragmentActivity) {
-                activity.supportFragmentManager
-                        .registerFragmentLifecycleCallbacks(
-                                object : FragmentManager.FragmentLifecycleCallbacks() {
-                                    override fun onFragmentCreated(fm: FragmentManager?, f: Fragment?,
-                                                                   savedInstanceState: Bundle?) {
-                                        if (f is Injectable) {
-                                            AndroidSupportInjection.inject(f)
-                                        }
-                                    }
-                                }, true)
+                activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                        object : FragmentManager.FragmentLifecycleCallbacks() {
+                            override fun onFragmentCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
+                                if (f is Injectable) {
+                                    AndroidSupportInjection.inject(f)
+                                }
+                            }
+                        }, true
+                    )
             }
         }
     }

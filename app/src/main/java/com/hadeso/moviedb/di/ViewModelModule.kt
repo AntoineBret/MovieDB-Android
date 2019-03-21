@@ -1,7 +1,7 @@
 package com.hadeso.moviedb.di
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.hadeso.moviedb.ui.discovery.DiscoveryViewModel
 import com.hadeso.moviedb.ui.movie.MovieViewModel
 import com.hadeso.moviedb.viewmodel.MovieDBViewModelFactory

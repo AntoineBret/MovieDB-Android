@@ -1,7 +1,7 @@
 package com.hadeso.moviedb.utils
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 /**
  * A value holder that automatically clears the reference if the Fragment's view is destroyed.
@@ -12,7 +12,7 @@ class AutoClearedValue<T>(fragment: Fragment, private var value: T?) {
         val fragmentManager = fragment.fragmentManager
         fragmentManager?.registerFragmentLifecycleCallbacks(
                 object : FragmentManager.FragmentLifecycleCallbacks() {
-                    override fun onFragmentViewDestroyed(fm: FragmentManager?, f: Fragment?) {
+                    override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
                         if (f === fragment) {
                             this@AutoClearedValue.value = null
                             fragmentManager.unregisterFragmentLifecycleCallbacks(this)

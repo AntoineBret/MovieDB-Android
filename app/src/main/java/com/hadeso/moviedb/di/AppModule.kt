@@ -2,8 +2,8 @@ package com.hadeso.moviedb.di
 
 import android.content.Context
 import com.hadeso.moviedb.MovieDBApp
-import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

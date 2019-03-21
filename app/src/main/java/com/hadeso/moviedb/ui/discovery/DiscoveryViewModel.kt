@@ -1,7 +1,7 @@
 package com.hadeso.moviedb.ui.discovery
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.hadeso.moviedb.model.DiscoveryMovieModel
 import com.hadeso.moviedb.repository.MovieRepository
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -1,15 +1,15 @@
 package com.hadeso.moviedb.ui.movie
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -20,7 +20,10 @@ import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
 import com.hadeso.moviedb.model.MovieModel
 import com.hadeso.moviedb.ui.discovery.DiscoveryViewItem
-import kotlinx.android.synthetic.main.fragment_movie.*
+import kotlinx.android.synthetic.main.fragment_movie.movieBackdrop
+import kotlinx.android.synthetic.main.fragment_movie.movieDescription
+import kotlinx.android.synthetic.main.fragment_movie.moviePoster
+import kotlinx.android.synthetic.main.fragment_movie.movieTitle
 import javax.inject.Inject
 
 const val KEY_MOVIE = "MOVIE"

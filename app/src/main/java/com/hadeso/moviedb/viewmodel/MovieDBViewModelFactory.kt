@@ -1,14 +1,14 @@
 package com.hadeso.moviedb.viewmodel
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
-class MovieDBViewModelFactory @Inject constructor(private val creators: Map<Class<out ViewModel>,
-        @JvmSuppressWildcards Provider<ViewModel>>) : ViewModelProvider.Factory {
+class MovieDBViewModelFactory @Inject constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val creator = creators[modelClass] ?:
@@ -16,6 +16,7 @@ class MovieDBViewModelFactory @Inject constructor(private val creators: Map<Clas
         ?: throw IllegalArgumentException("unknown model class $modelClass")
 
         return try {
+            @Suppress("UNCHECKED_CAST")
             creator.get() as T
         } catch (e: Exception) {
             throw RuntimeException(e)

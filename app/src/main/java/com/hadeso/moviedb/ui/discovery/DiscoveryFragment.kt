@@ -1,23 +1,20 @@
 package com.hadeso.moviedb.ui.discovery
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.transition.Fade
-import android.transition.TransitionInflater
-import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
 import com.hadeso.moviedb.ui.movie.MovieFragment
 import com.hadeso.moviedb.utils.AutoClearedValue
-import kotlinx.android.synthetic.main.fragment_discovery.*
+import kotlinx.android.synthetic.main.fragment_discovery.discoveryRecyclerView
 import javax.inject.Inject
 
 class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
