@@ -7,10 +7,10 @@ import com.hadeso.moviedb.architecture.base.Action
 import com.hadeso.moviedb.architecture.base.IntentInterpreter
 import com.hadeso.moviedb.core.state.AppState
 import com.hadeso.moviedb.core.view.BaseViewModel
-import com.hadeso.moviedb.feature.discovery.detail.domain.MovieDetailCommand
-import com.hadeso.moviedb.feature.discovery.detail.domain.MovieDetailUseCase
+import com.hadeso.moviedb.feature.discovery.detail.domain.loadMovieDetail
 import com.hadeso.moviedb.feature.discovery.detail.state.MovieDetailState
 import com.hadeso.moviedb.feature.discovery.detail.state.movieDetailLens
+import com.hadeso.moviedb.feature.discovery.domain.MovieRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
@@ -18,8 +18,8 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class MovieDetailViewModel @Inject constructor(private val movieDetailUseCase: MovieDetailUseCase, private val store: Store<AppState>) : BaseViewModel(),
-    IntentInterpreter<MovieDetailIntent, MovieDetailCommand, MovieDetailState> {
+class MovieDetailViewModel @Inject constructor(private val movieRepository: MovieRepository, private val store: Store<AppState>) : BaseViewModel(),
+    IntentInterpreter<MovieDetailIntent, MovieDetailState> {
 
     private val stateLiveData: MutableLiveData<MovieDetailState> = MutableLiveData()
 
@@ -32,19 +32,16 @@ class MovieDetailViewModel @Inject constructor(private val movieDetailUseCase: M
             ).addTo(disposable)
     }
 
-    override fun command(intentObservable: Observable<MovieDetailIntent>): Observable<MovieDetailCommand> {
+
+    override fun action(intentObservable: Observable<MovieDetailIntent>): Observable<Action> {
         return intentObservable
             .observeOn(Schedulers.computation())
-            .flatMapIterable { intent ->
+            .flatMap { intent ->
                 Timber.d("Received intent : ${intent::class.java.simpleName}")
-                return@flatMapIterable when (intent) {
-                    is MovieDetailIntent.Initial -> listOf(MovieDetailCommand.LoadMovieDetail(intent.movieId))
+                return@flatMap when (intent) {
+                    is MovieDetailIntent.Initial -> loadMovieDetail(movieRepository, intent.movieId)
                 }
             }
-    }
-
-    override fun action(commandObservable: Observable<MovieDetailCommand>): Observable<Action> {
-        return movieDetailUseCase.execute(commandObservable)
     }
 
     override fun state(actionObservable: Observable<Action>): Observable<MovieDetailState> {

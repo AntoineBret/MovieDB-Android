@@ -7,8 +7,9 @@ import com.hadeso.moviedb.architecture.base.Action
 import com.hadeso.moviedb.architecture.base.IntentInterpreter
 import com.hadeso.moviedb.core.state.AppState
 import com.hadeso.moviedb.core.view.BaseViewModel
-import com.hadeso.moviedb.feature.discovery.domain.DiscoveryCommand
-import com.hadeso.moviedb.feature.discovery.domain.DiscoveryUseCase
+import com.hadeso.moviedb.feature.discovery.domain.MovieRepository
+import com.hadeso.moviedb.feature.discovery.domain.goToDetails
+import com.hadeso.moviedb.feature.discovery.domain.loadMovies
 import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
 import com.hadeso.moviedb.feature.discovery.state.discoveryLens
 import io.reactivex.Observable
@@ -19,10 +20,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DiscoveryViewModel @Inject constructor(
-    private val discoveryUseCase: DiscoveryUseCase,
+    private val movieRepository: MovieRepository,
     private val store: Store<AppState>
 ) : BaseViewModel(),
-    IntentInterpreter<DiscoveryIntent, DiscoveryCommand, DiscoveryState> {
+    IntentInterpreter<DiscoveryIntent, DiscoveryState> {
 
     private val stateLiveData: MutableLiveData<DiscoveryState> = MutableLiveData()
 
@@ -35,20 +36,16 @@ class DiscoveryViewModel @Inject constructor(
             ).addTo(disposable)
     }
 
-    override fun command(intentObservable: Observable<DiscoveryIntent>): Observable<DiscoveryCommand> {
+    override fun action(intentObservable: Observable<DiscoveryIntent>): Observable<Action> {
         return intentObservable
             .observeOn(Schedulers.computation())
-            .flatMapIterable { intent ->
+            .flatMap { intent ->
                 Timber.d("Received intent : ${intent::class.java.simpleName}")
-                return@flatMapIterable when (intent) {
-                    DiscoveryIntent.Initial -> listOf(DiscoveryCommand.LoadMovies)
-                    is DiscoveryIntent.MovieSelected -> listOf(DiscoveryCommand.GoToDetail(intent.movieId))
+                return@flatMap when (intent) {
+                    DiscoveryIntent.Initial -> loadMovies(movieRepository)
+                    is DiscoveryIntent.MovieSelected -> goToDetails(intent.movieId)
                 }
             }
-    }
-
-    override fun action(commandObservable: Observable<DiscoveryCommand>): Observable<Action> {
-        return discoveryUseCase.execute(commandObservable)
     }
 
     override fun state(actionObservable: Observable<Action>): Observable<DiscoveryState> {

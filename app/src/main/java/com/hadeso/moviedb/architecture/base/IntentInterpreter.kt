@@ -5,20 +5,20 @@ import io.reactivex.Observable
 
 /**
  * [IntentInterpreter] is the intermediary between an [Intent] and the resulting [State].
- * It will schedule the [Command] / [Action] creation to make an [Intent] be transformed into a
- * [State] by leveraging the [Command] -> [Action] -> [State] workflow.
+ * It will schedule the [Intent] / [Action] creation to make an [Intent] be transformed into a
+ * [State] by leveraging the [Intent] -> [Action] -> [State] workflow.
  * [IntentInterpreter] is the privileged way to interpret an [Intent] with the whole State Container mechanisms.
  */
-interface IntentInterpreter<I : Intent, C : Command, S : State> {
+interface IntentInterpreter<I : Intent, S : State> {
 
     /**
      * Interprets an [Intent] to generate a new [State]
-     * LifeCycle of an [Intent]: [Intent] -> [Command] -> [Action] -> [State]
+     * LifeCycle of an [Intent]: [Intent] -> [Action] -> [State]
      * @param intentObservable: the user input formalized by the [Intent]
      * @return the [State] to be handled by the [View]
      */
     fun interpret(intentObservable: Observable<I>): Observable<S> {
-        return intentObservable.compose(::command)
+        return intentObservable
             .compose(::action)
             .compose(::state)
     }
@@ -30,18 +30,11 @@ interface IntentInterpreter<I : Intent, C : Command, S : State> {
     fun processIntents(intentObservable: Observable<I>)
 
     /**
-     * Retrieves a [Command] according to an [Intent]
-     * @param intentObservable: the user input formalized by the [Intent]
-     * @return the command to be executed by the [UseCase]
-     */
-    fun command(intentObservable: Observable<I>): Observable<C>
-
-    /**
-     * Retrieves an [Action] according to a [Command]
-     * @param commandObservable: [Command] to be executed by the [UseCase]
+     * Retrieves an [Action] according to a [Intent]
+     * @param intentObservable: [Intent] to be executed by the [UseCase]
      * @return [Action] to be dispatched to the [Store]
      */
-    fun action(commandObservable: Observable<C>): Observable<Action>
+    fun action(intentObservable: Observable<I>): Observable<Action>
 
     /**
      * Retrieves a [State] according to an [Action]
