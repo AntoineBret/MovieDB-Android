@@ -1,7 +1,7 @@
 package com.hadeso.moviedb.di.module
 
+import com.hadeso.moviedb.feature.discovery.detail.view.MovieDetailFragment
 import com.hadeso.moviedb.feature.discovery.view.DiscoveryFragment
-import com.hadeso.moviedb.feature.discovery.detail.view.MovieFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -11,5 +11,5 @@ abstract class FragmentBuildersModule {
     abstract fun contributeDiscoveryFragment(): DiscoveryFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeMovieFragment(): MovieFragment
+    abstract fun contributeMovieDetailFragment(): MovieDetailFragment
 }

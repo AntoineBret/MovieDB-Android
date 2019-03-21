@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.Injectable
-import com.hadeso.moviedb.feature.discovery.detail.view.MovieFragment
+import com.hadeso.moviedb.feature.discovery.detail.view.MovieDetailFragment
 import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
 import com.hadeso.moviedb.feature.discovery.view.adapter.DiscoveryAdapter
 import com.hadeso.moviedb.utils.AutoClearedValue
@@ -75,7 +75,7 @@ class DiscoveryFragment : Fragment(), Injectable, BaseView<DiscoveryIntent, Disc
     }
 
     private fun goToMovie(movie: DiscoveryViewItem) {
-        val nextFragment = MovieFragment.newInstance(movie)
+        val nextFragment = MovieDetailFragment.newInstance(movie)
 
         val fragmentTransaction = fragmentManager?.beginTransaction()
         fragmentTransaction//?.addSharedElement(sharedElement, sharedElement.transitionName)
