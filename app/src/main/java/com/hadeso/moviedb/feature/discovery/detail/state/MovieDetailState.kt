@@ -5,8 +5,15 @@ import com.hadeso.moviedb.feature.discovery.detail.domain.MovieDetailError
 import com.hadeso.moviedb.feature.discovery.detail.view.MovieDetailViewItem
 
 sealed class MovieDetailState : State {
-    object Idle : MovieDetailState()
-    object Loading : MovieDetailState()
-    data class DetailsLoaded(val movieDetailViewItem: MovieDetailViewItem) : MovieDetailState()
-    data class Error(val error: MovieDetailError) : MovieDetailState()
+    abstract val data: MovieDetailData
+
+    data class Idle(override val data: MovieDetailData) : MovieDetailState()
+    data class Loading(override val data: MovieDetailData) : MovieDetailState()
+    data class DetailsLoaded(override val data: MovieDetailData) : MovieDetailState()
+    data class Error(override val data: MovieDetailData) : MovieDetailState()
 }
+
+data class MovieDetailData(
+    val movieDetailViewItem: MovieDetailViewItem? = null,
+    val error: MovieDetailError? = null
+)

@@ -70,10 +70,10 @@ class MovieDetailFragment : Fragment(), Injectable, BaseView<MovieDetailIntent, 
 
     override fun render(state: MovieDetailState) {
         when (state) {
-            MovieDetailState.Loading -> showLoading(true)
+            is MovieDetailState.Loading -> showLoading(true)
             is MovieDetailState.DetailsLoaded -> {
                 showLoading(false)
-                showMovieDetail(state.movieDetailViewItem)
+                showMovieDetail(state.data.movieDetailViewItem)
             }
         }
     }
@@ -82,17 +82,17 @@ class MovieDetailFragment : Fragment(), Injectable, BaseView<MovieDetailIntent, 
         if (isLoading) progressBar.visibility = android.view.View.VISIBLE else progressBar.visibility = android.view.View.GONE
     }
 
-    private fun showMovieDetail(movieDetailViewItem: MovieDetailViewItem) {
-        moviePoster.transitionName = movieDetailViewItem.id.toString()
-        movieTitle.text = movieDetailViewItem.title
-        movieDescription.text = movieDetailViewItem.overview
+    private fun showMovieDetail(movieDetailViewItem: MovieDetailViewItem?) {
+        moviePoster.transitionName = movieDetailViewItem?.id.toString()
+        movieTitle.text = movieDetailViewItem?.title
+        movieDescription.text = movieDetailViewItem?.overview
         context?.let {
             Glide.with(it)
-                .load("https://image.tmdb.org/t/p/w154" + movieDetailViewItem.posterPath)
+                .load("https://image.tmdb.org/t/p/w154" + movieDetailViewItem?.posterPath)
                 .apply(RequestOptions.fitCenterTransform())
                 .into(moviePoster)
             Glide.with(it)
-                .load("https://image.tmdb.org/t/p/w780" + movieDetailViewItem.backdropPath)
+                .load("https://image.tmdb.org/t/p/w780" + movieDetailViewItem?.backdropPath)
                 .into(movieBackdrop)
         }
     }

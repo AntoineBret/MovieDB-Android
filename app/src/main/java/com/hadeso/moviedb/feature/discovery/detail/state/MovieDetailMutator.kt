@@ -25,8 +25,8 @@ private fun movieDetailReducer(state: AppState, action: Action): MovieDetailStat
 private fun reduceMovieDetailAction(action: MovieDetailAction, previousState: MovieDetailState): MovieDetailState {
     Timber.d("Received action : ${action::class.java.simpleName}")
     return when (action) {
-        MovieDetailAction.StartLoad -> MovieDetailState.Loading
-        is MovieDetailAction.UpdateMovieDetail -> MovieDetailState.DetailsLoaded(action.movieDetailViewItem)
-        is MovieDetailAction.Error -> MovieDetailState.Error(action.error)
+        MovieDetailAction.StartLoad -> MovieDetailState.Loading(previousState.data)
+        is MovieDetailAction.UpdateMovieDetail -> MovieDetailState.DetailsLoaded(previousState.data.copy(movieDetailViewItem = action.movieDetailViewItem))
+        is MovieDetailAction.Error -> MovieDetailState.Error(previousState.data.copy(error = action.error))
     }
 }

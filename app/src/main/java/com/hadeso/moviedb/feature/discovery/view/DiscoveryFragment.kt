@@ -61,10 +61,10 @@ class DiscoveryFragment : Fragment(), Injectable, BaseView<DiscoveryIntent, Disc
 
     override fun render(state: DiscoveryState) {
         when (state) {
-            DiscoveryState.Loading -> showLoading(true)
+            is DiscoveryState.Loading -> showLoading(true)
             is DiscoveryState.MoviesLoaded -> {
                 showLoading(false)
-                updateList(state.discoveryMovies)
+                updateList(state.data.discoveryMovies)
             }
             is DiscoveryState.MovieNavigation -> goToMovie(state.movieId)
         }

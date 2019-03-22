@@ -4,10 +4,12 @@ import android.content.Context
 import com.hadeso.moviedb.MovieDBApp
 import com.hadeso.moviedb.architecture.Store
 import com.hadeso.moviedb.core.state.AppState
+import com.hadeso.moviedb.feature.discovery.detail.state.MovieDetailData
 import com.hadeso.moviedb.feature.discovery.detail.state.MovieDetailState
 import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
 import com.hadeso.moviedb.feature.discovery.state.discoveryMutator
 import com.hadeso.moviedb.feature.discovery.detail.state.movieDetailMutator
+import com.hadeso.moviedb.feature.discovery.state.DiscoveryData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -35,8 +37,8 @@ object AppModule {
     @Singleton
     fun provideStore(): Store<AppState> {
         val initialState = AppState(
-            discoveryState = DiscoveryState.Idle,
-            movieDetailState = MovieDetailState.Idle
+            discoveryState = DiscoveryState.Idle(DiscoveryData()),
+            movieDetailState = MovieDetailState.Idle(MovieDetailData())
         )
         return Store(initialState).apply {
             register(DiscoveryState::class.java, discoveryMutator)
