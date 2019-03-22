@@ -10,6 +10,7 @@ import com.hadeso.moviedb.core.view.BaseViewModel
 import com.hadeso.moviedb.feature.discovery.domain.MovieRepository
 import com.hadeso.moviedb.feature.discovery.domain.goToDetails
 import com.hadeso.moviedb.feature.discovery.domain.loadMovies
+import com.hadeso.moviedb.feature.discovery.domain.resumeLastState
 import com.hadeso.moviedb.feature.discovery.state.DiscoveryState
 import com.hadeso.moviedb.feature.discovery.state.discoveryLens
 import io.reactivex.Observable
@@ -43,7 +44,8 @@ class DiscoveryViewModel @Inject constructor(
                 Timber.d("Received intent : ${intent::class.java.simpleName}")
                 return@flatMap when (intent) {
                     DiscoveryIntent.Initial -> loadMovies(movieRepository)
-                    is DiscoveryIntent.MovieSelected -> goToDetails(intent.movieId)
+                    DiscoveryIntent.ViewResumed -> resumeLastState()
+                    is DiscoveryIntent.MovieSelected -> goToDetails(intent.movieId, intent.posterUrl, intent.movieTitle)
                 }
             }
     }

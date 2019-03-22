@@ -26,10 +26,9 @@ private fun reduceDiscoveryAction(action: DiscoveryAction, previousState: Discov
     Timber.d("Received action : ${action::class.java.simpleName}")
     return when (action) {
         DiscoveryAction.StartLoad -> DiscoveryState.Loading(previousState.data)
+        DiscoveryAction.ResumeLastState -> DiscoveryState.MoviesLoaded(previousState.data)
         is DiscoveryAction.UpdateMovies -> DiscoveryState.MoviesLoaded(previousState.data.copy(discoveryMovies = action.discoveryMovies))
-        is DiscoveryAction.GoToMovie -> DiscoveryState.MovieNavigation(previousState.data, action.movieId)
+        is DiscoveryAction.GoToMovie -> DiscoveryState.MovieNavigation(previousState.data, action.movieId, action.posterUrl, action.movieTitle)
         is DiscoveryAction.Error -> DiscoveryState.Error(previousState.data.copy(error = action.error))
     }
 }
-
-

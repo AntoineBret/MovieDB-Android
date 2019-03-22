@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="8dp">
+    android:layout_marginTop="8dp">
 
     <View
         android:id="@+id/movieBackground"
         android:layout_width="match_parent"
         android:layout_height="134dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="4dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,9 +25,10 @@
         android:layout_height="154dp"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="8dp"
+        android:elevation="4dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/movieBackground"
         tools:src="@drawable/ic_launcher_background" />
 
     <TextView
@@ -35,6 +38,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:elevation="4dp"
         android:ellipsize="end"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@id/movieBackground"
@@ -48,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
+        android:elevation="4dp"
         android:ellipsize="end"
         android:maxLines="4"
         android:textColor="@color/grey"

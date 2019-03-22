@@ -16,13 +16,6 @@ class HomeActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (savedInstanceState == null) {
-            val discoveryFragment = DiscoveryFragment.newInstance()
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, discoveryFragment)
-                    .commit()
-        }
     }
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {

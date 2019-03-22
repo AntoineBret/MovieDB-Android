@@ -10,7 +10,7 @@ sealed class DiscoveryState : State {
     data class Idle(override val data: DiscoveryData) : DiscoveryState()
     data class Loading(override val data: DiscoveryData) : DiscoveryState()
     data class MoviesLoaded(override val data: DiscoveryData) : DiscoveryState()
-    data class MovieNavigation(override val data: DiscoveryData, val movieId: Int) : DiscoveryState()
+    data class MovieNavigation(override val data: DiscoveryData, val movieId: Int, val posterUrl: String, val movieTitle: String) : DiscoveryState()
     data class Error(override val data: DiscoveryData) : DiscoveryState()
 }
 

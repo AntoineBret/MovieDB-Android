@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/discoveryFragment">
+
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.hadeso.moviedb.feature.discovery.view.DiscoveryFragment"
+        android:label="DiscoveryFragment"
+        tools:layout="@layout/fragment_discovery">
+        <action
+            android:id="@+id/action_discoveryFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.hadeso.moviedb.feature.discovery.detail.view.MovieDetailFragment"
+        android:label="MovieDetailFragment"
+        tools:layout="@layout/fragment_movie_detail">
+        <argument
+            android:name="movieId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="posterUrl"
+            app:argType="string" />
+        <argument
+            android:name="movieTitle"
+            app:argType="string" />
+    </fragment>
+</navigation>

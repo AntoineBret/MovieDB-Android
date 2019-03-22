@@ -7,7 +7,10 @@ import com.hadeso.moviedb.model.DiscoveryMovieModel
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-fun goToDetails(movieId: Int): Observable<Action> = Observable.fromCallable { DiscoveryAction.GoToMovie(movieId) }
+fun resumeLastState() = Observable.fromCallable { DiscoveryAction.ResumeLastState }
+
+fun goToDetails(movieId: Int, posterUrl: String, movieTitle: String): Observable<Action> =
+    Observable.fromCallable { DiscoveryAction.GoToMovie(movieId, posterUrl, movieTitle) }
 
 fun loadMovies(movieRepository: MovieRepository): Observable<Action> {
     return movieRepository.getDiscoveryMovies()
@@ -16,9 +19,9 @@ fun loadMovies(movieRepository: MovieRepository): Observable<Action> {
         .map { DiscoveryAction.UpdateMovies(it) }
         .cast(Action::class.java)
         .toObservable()
-        .startWith(DiscoveryAction.StartLoad)
         .onErrorReturn { DiscoveryAction.Error(DiscoveryError.Network) }
         .subscribeOn(Schedulers.io())
+        .startWith(DiscoveryAction.StartLoad)
 }
 
 private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
