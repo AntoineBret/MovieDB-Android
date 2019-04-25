@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.di.archModule
 
 import android.content.Context
 import com.hadeso.moviedb.MovieDBApp

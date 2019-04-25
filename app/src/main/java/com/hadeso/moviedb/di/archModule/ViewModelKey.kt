@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.di.archModule
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

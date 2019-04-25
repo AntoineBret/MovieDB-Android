@@ -1,4 +1,26 @@
 <resources>
     <string name="app_name">MovieDB</string>
     <string name="action_settings">Settings</string>
+
+  <string name="home_fragment_toolbar_title">Home</string>
+  <string name="discover_movie_toolbar_title">Movies</string>
+  <string name="discover_movie_detail_toolbar_title">Movie detail</string>
+
+  <string name="navigation_drawer_open">open</string>
+  <string name="navigation_drawer_close">close</string>
+
+  <!-- Nav drawer category -->
+  <string name="discover">Découvrir</string>
+  <string name="movie">Films</string>
+  <string name="tv">Télévision</string>
+  <string name="artist">Artistes</string>
+
+  <!-- Nav drawer details -->
+  <string name="popular">Populaire</string>
+  <string name="best_ranked">Mieux notés</string>
+  <string name="soon_in_theaters">Prochainement</string>
+  <string name="currently_in_theaters">Actuellement en salles</string>
+  <string name="actually_broadcast">Séries en cours de diffusion</string>
+  <string name="today_broadcast">Diffusées aujourd\'hui</string>
+
 </resources>

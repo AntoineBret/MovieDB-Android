@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <group>
+    <item android:title="@string/discover">
+      <menu>
+        <item android:id="@+id/nav_discover_movie"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/movie" />
+
+        <item android:id="@+id/nav_discover_tv"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/tv" />
+      </menu>
+    </item>
+  </group>
+
+  <group>
+    <item android:title="@string/movie">
+      <menu>
+        <item android:id="@+id/nav_movie_popular"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/popular" />
+
+        <item android:id="@+id/nav_movie_best_rated"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/best_ranked" />
+
+        <item android:id="@+id/nav_movie_shortly"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/soon_in_theaters" />
+
+        <item android:id="@+id/nav_movie_in_theaters"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/currently_in_theaters" />
+
+      </menu>
+    </item>
+  </group>
+
+  <group>
+    <item android:title="@string/tv">
+      <menu>
+        <item android:id="@+id/nav_tv_popular"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/popular" />
+
+        <item android:id="@+id/nav_tv_best_rated"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/best_ranked" />
+
+        <item android:id="@+id/nav_tv_actually_broadcast"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/actually_broadcast" />
+
+        <item android:id="@+id/nav_tv_today_broadcast"
+          android:icon="@drawable/ic_launcher_background"
+          android:title="@string/today_broadcast" />
+      </menu>
+    </item>
+  </group>
+
+  <group>
+    <item android:title="@string/artist">
+
+    </item>
+  </group>
+
+</menu>

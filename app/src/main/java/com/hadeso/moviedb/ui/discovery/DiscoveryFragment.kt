@@ -5,79 +5,98 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.hadeso.moviedb.R
-import com.hadeso.moviedb.di.Injectable
+import com.hadeso.moviedb.di.archModule.Injectable
 import com.hadeso.moviedb.ui.movie.MovieFragment
-import com.hadeso.moviedb.utils.AutoClearedValue
-import kotlinx.android.synthetic.main.fragment_discovery.discoveryRecyclerView
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
+import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
 class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
 
-    companion object {
-        fun newInstance(): Fragment {
-            return DiscoveryFragment()
-        }
+  companion object {
+    fun newInstance(): Fragment {
+      return DiscoveryFragment()
     }
+  }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+  @Inject
+  lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: DiscoveryViewModel
+  private lateinit var viewModel: DiscoveryViewModel
+  private val disposable = CompositeDisposable()
+  private lateinit var adapter: DiscoveryAdapter
 
-    private lateinit var adapter: AutoClearedValue<DiscoveryAdapter>
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater.inflate(R.layout.fragment_discovery, container, false)
+  }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_discovery, container, false)
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+    viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
+
+    initHeader()
+    initLiveData()
+    initSearchBar()
+//    initSearchOptions()
+  }
+
+  override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
+    val nextFragment = MovieFragment.newInstance(movie)
+    val fragmentTransaction = fragmentManager?.beginTransaction()
+
+    fragmentTransaction?.addSharedElement(sharedElement, sharedElement.transitionName)
+      ?.replace(R.id.discovery_container, nextFragment)
+      ?.addToBackStack(null)
+      ?.commit()
+  }
+
+  private fun initLiveData() {
+    viewModel.getMovies().observe(this, Observer<List<DiscoveryViewItem>> { movies ->
+      movies?.let {
+        initRecyclerView(it)
+      }
+    })
+  }
+
+  private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
+    if (!this::adapter.isInitialized) {
+      adapter = DiscoveryAdapter(this)
+      discoveryRecyclerView.adapter = adapter
+      discoveryRecyclerView.apply {
+        setHasFixedSize(true)
+        val linearLayout = LinearLayoutManager(context)
+        layoutManager = linearLayout
+      }
     }
+    adapter.submitList(movies)
+  }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DiscoveryViewModel::class.java)
+  private fun initSearchBar() {
+    disposable.add(RxSearchView.queryTextChanges(search_bar)
+      .skipInitialValue()
+      .subscribe { query -> viewModel.search(query) })
+  }
 
-        initRecyclerView(emptyList())
-        initLiveData()
-    }
+  private fun initHeader() {
+    (activity as AppCompatActivity).setSupportActionBar(toolbarDiscovery)
+    (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-    override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
+    toolbarDiscovery.title = getString(R.string.discover_movie_toolbar_title)
 
-
-        val nextFragment = MovieFragment.newInstance(movie)
-
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-
-
-        fragmentTransaction?.addSharedElement(sharedElement, sharedElement.transitionName)
-                ?.replace(R.id.container, nextFragment)
-                ?.addToBackStack(null)
-                ?.commit()
-    }
-
-    private fun initLiveData() {
-        viewModel.getMovies().observe(this, Observer<List<DiscoveryViewItem>> { movies ->
-            updateMovies(movies!!)
-        })
-    }
-
-    private fun initRecyclerView(movies: List<DiscoveryViewItem>) {
-        val movieAdapter = DiscoveryAdapter(movies, this)
-        discoveryRecyclerView.adapter = movieAdapter
-        discoveryRecyclerView.apply {
-            setHasFixedSize(true)
-            val linearLayout = LinearLayoutManager(context)
-            layoutManager = linearLayout
-        }
-        adapter = AutoClearedValue(this, movieAdapter)
-    }
-
-    private fun updateMovies(movies: List<DiscoveryViewItem>) {
-        adapter.get()?.updateMovies(movies)
-        adapter.get()?.notifyDataSetChanged()
-    }
-
+    Glide
+      .with(this)
+      .load("https://image.tmdb.org/t/p/w500_and_h282_face/qsD5OHqW7DSnaQ2afwz8Ptht1Xb.jpg")
+      .apply(RequestOptions.fitCenterTransform())
+      .into(backdrop)
+  }
 }

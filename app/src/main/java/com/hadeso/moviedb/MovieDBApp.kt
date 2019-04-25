@@ -2,7 +2,7 @@ package com.hadeso.moviedb
 
 import android.app.Activity
 import android.app.Application
-import com.hadeso.moviedb.di.AppInjector
+import com.hadeso.moviedb.di.archModule.AppInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import timber.log.Timber

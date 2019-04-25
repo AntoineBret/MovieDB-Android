@@ -1,4 +1,4 @@
-package com.hadeso.moviedb.di
+package com.hadeso.moviedb.di.archModule
 
 import android.app.Activity
 import android.app.Application
@@ -36,7 +36,7 @@ class AppInjector {
                 }
 
                 override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-                    handleActivity(activity)
+                  handleActivity(activity)
                 }
 
             })
