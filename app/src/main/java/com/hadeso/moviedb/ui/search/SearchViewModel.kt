@@ -49,9 +49,9 @@ class SearchViewModel @Inject constructor(private val movieRepository: MovieRepo
     get() {
       val expandableListDetail = java.util.HashMap<String, List<Any>>()
 
-      expandableListDetail["Genres"] = genres
-      expandableListDetail["Trier par"] = sortBy
-      expandableListDetail["Année"] = year
+      expandableListDetail["By genre"] = genres
+      expandableListDetail["Sort by"] = sortBy
+      expandableListDetail["By year"] = year
 
       return expandableListDetail
     }

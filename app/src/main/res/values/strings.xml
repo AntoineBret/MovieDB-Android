@@ -10,17 +10,17 @@
   <string name="navigation_drawer_close">close</string>
 
   <!-- Nav drawer category -->
-  <string name="discover">Découvrir</string>
-  <string name="movie">Films</string>
-  <string name="tv">Télévision</string>
-  <string name="artist">Artistes</string>
+  <string name="discover">Discover</string>
+  <string name="movie">Movies</string>
+  <string name="tv">Tv</string>
+  <string name="artist">Artist</string>
 
   <!-- Nav drawer details -->
-  <string name="popular">Populaire</string>
-  <string name="best_ranked">Mieux notés</string>
-  <string name="soon_in_theaters">Prochainement</string>
-  <string name="currently_in_theaters">Actuellement en salles</string>
-  <string name="actually_broadcast">Séries en cours de diffusion</string>
-  <string name="today_broadcast">Diffusées aujourd\'hui</string>
+  <string name="popular">Popular</string>
+  <string name="best_ranked">Best ranked</string>
+  <string name="soon_in_theaters">Soon in theaters</string>
+  <string name="currently_in_theaters">Currently in theaters</string>
+  <string name="actually_broadcast">Actually broadcast</string>
+  <string name="today_broadcast">Today broadcast</string>
 
 </resources>

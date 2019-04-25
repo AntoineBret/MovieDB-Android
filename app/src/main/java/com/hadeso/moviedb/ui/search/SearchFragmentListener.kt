@@ -7,5 +7,5 @@ interface SearchFragmentListener {
 }
 
 interface SortByListener {
-  fun onSearchSelected(isSelected: Boolean)
+  fun onSearchSelected(isSelected: Boolean, selectedValue: String)
 }

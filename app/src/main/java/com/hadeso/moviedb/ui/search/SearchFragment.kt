@@ -57,11 +57,10 @@ class SearchFragment(val sortByListener: SortByListener, val searchFragmentListe
         viewModel.genres.addAll(it.map { it.name })
       }
     })
-
-    viewModel.sortBy.add("Popularité")
-    viewModel.sortBy.add("Note")
-    viewModel.sortBy.add("Date de sortie")
-    viewModel.sortBy.add("Titre")
+    viewModel.sortBy.add("Popularity")
+    viewModel.sortBy.add("Average")
+    viewModel.sortBy.add("Release date")
+    viewModel.sortBy.add("Title")
 
     val range = IntStream.rangeClosed(1900, 2019).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList())
     viewModel.year.addAll(range)
@@ -80,11 +79,13 @@ class SearchFragment(val sortByListener: SortByListener, val searchFragmentListe
 
   private fun initListeners() {
     expandableListView!!.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
-      sortByListener.onSearchSelected(true)
+      val selectedListTitle = expandableListTitle!![groupPosition]
+      val selectedListDetail = expandableListDetail!![expandableListTitle!![groupPosition]]!![childPosition]
+      sortByListener.onSearchSelected(true, "${selectedListTitle.toLowerCase()} ${selectedListDetail.toString().toLowerCase()}")
       when (groupPosition) {
-        0 -> searchFragmentListener.onTypeSelected(expandableListDetail!![expandableListTitle!![groupPosition]]!![childPosition] as String)
-        1 -> searchFragmentListener.onYearSelected(expandableListDetail!![expandableListTitle!![groupPosition]]!![childPosition] as Int)
-        2 -> getGenreIdByName(expandableListDetail!![expandableListTitle!![groupPosition]]!![childPosition] as String)
+        0 -> searchFragmentListener.onTypeSelected(selectedListDetail as String)
+        1 -> searchFragmentListener.onYearSelected(selectedListDetail as Int)
+        2 -> getGenreIdByName(selectedListDetail as String)
       }
       false
     }

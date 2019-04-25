@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,10 +53,10 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
     initSearchOptions()
   }
 
-  override fun onSearchSelected(isSelected: Boolean) {
-    if (isSelected){
-      toolbarDiscovery.title = "pouet"
-      menu_sort.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel))
+  override fun onSearchSelected(isSelected: Boolean, selectedValue: String) {
+    if (isSelected) {
+      collapsing_toolbar.title = getString(R.string.discover_movie_toolbar_title)+" "+selectedValue
+      menu_sort.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel, null))
       viewModel.isSearchIsSelected.value = true
     }
   }
@@ -101,7 +102,7 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
     (activity as AppCompatActivity).setSupportActionBar(toolbarDiscovery)
     (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-    toolbarDiscovery.title = getString(R.string.discover_movie_toolbar_title)
+    collapsing_toolbar.title = getString(R.string.discover_movie_toolbar_title)
 
     Glide
       .with(this)
@@ -112,12 +113,12 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
 
   private fun initSearchOptions() {
     menu_sort.setOnClickListener {
-      if (viewModel.isSearchIsSelected.value == true){
-        toolbarDiscovery.title = getString(R.string.discover_movie_toolbar_title)
-        menu_sort.setImageDrawable(resources.getDrawable(R.drawable.ic_order_by))
-        //todo : return to original list
+      if (viewModel.isSearchIsSelected.value == true) {
+        collapsing_toolbar.title = getString(R.string.discover_movie_toolbar_title)
+        menu_sort.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_order_by, null))
+        viewModel.displayFullList()
         viewModel.isSearchIsSelected.value = false
-      }else{
+      } else {
         val fm = fragmentManager
         val dialogFragment = SearchFragment(this, viewModel)
         dialogFragment.show(fm!!, "Sample Fragment")
