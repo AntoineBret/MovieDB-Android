@@ -16,12 +16,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.hadeso.moviedb.R
 import com.hadeso.moviedb.di.archModule.Injectable
 import com.hadeso.moviedb.ui.movie.MovieFragment
+import com.hadeso.moviedb.ui.search.SearchFragment
+import com.hadeso.moviedb.ui.search.SortByListener
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import javax.inject.Inject
 
-class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener {
+class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelectedListener, SortByListener {
 
   companion object {
     fun newInstance(): Fragment {
@@ -47,7 +49,15 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
     initHeader()
     initLiveData()
     initSearchBar()
-//    initSearchOptions()
+    initSearchOptions()
+  }
+
+  override fun onSearchSelected(isSelected: Boolean) {
+    if (isSelected){
+      toolbarDiscovery.title = "pouet"
+      menu_sort.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel))
+      viewModel.isSearchIsSelected.value = true
+    }
   }
 
   override fun onMovieSelected(movie: DiscoveryViewItem, sharedElement: ImageView) {
@@ -84,7 +94,7 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
   private fun initSearchBar() {
     disposable.add(RxSearchView.queryTextChanges(search_bar)
       .skipInitialValue()
-      .subscribe { query -> viewModel.search(query) })
+      .subscribe { query -> viewModel.searchByQuery(query) })
   }
 
   private fun initHeader() {
@@ -98,5 +108,20 @@ class DiscoveryFragment : Fragment(), Injectable, DiscoveryAdapter.OnMovieSelect
       .load("https://image.tmdb.org/t/p/w500_and_h282_face/qsD5OHqW7DSnaQ2afwz8Ptht1Xb.jpg")
       .apply(RequestOptions.fitCenterTransform())
       .into(backdrop)
+  }
+
+  private fun initSearchOptions() {
+    menu_sort.setOnClickListener {
+      if (viewModel.isSearchIsSelected.value == true){
+        toolbarDiscovery.title = getString(R.string.discover_movie_toolbar_title)
+        menu_sort.setImageDrawable(resources.getDrawable(R.drawable.ic_order_by))
+        //todo : return to original list
+        viewModel.isSearchIsSelected.value = false
+      }else{
+        val fm = fragmentManager
+        val dialogFragment = SearchFragment(this, viewModel)
+        dialogFragment.show(fm!!, "Sample Fragment")
+      }
+    }
   }
 }

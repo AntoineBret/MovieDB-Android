@@ -57,8 +57,6 @@ class MovieFragment : Fragment(), Injectable {
     super.onActivityCreated(savedInstanceState)
     viewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel::class.java)
 
-    initToolbar()
-
     val movie: DiscoveryViewItem? = arguments?.getParcelable(KEY_MOVIE)
 
     moviePoster.transitionName = movie!!.id.toString()
@@ -81,6 +79,7 @@ class MovieFragment : Fragment(), Injectable {
       .into(moviePoster)
     viewModel.init(movie)
     initLiveData()
+    initToolbar()
   }
 
   private fun initLiveData() {

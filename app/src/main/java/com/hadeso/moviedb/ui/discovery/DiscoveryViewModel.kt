@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hadeso.moviedb.model.DiscoveryMovieModel
 import com.hadeso.moviedb.repository.MovieRepository
+import com.hadeso.moviedb.ui.search.SearchFragmentListener
+import com.hadeso.moviedb.utils.DateFormat.getDateFormatted
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -11,15 +13,25 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel(), SearchFragmentListener {
 
   private val disposable = CompositeDisposable()
+
   private val originalMovieList: MutableLiveData<List<DiscoveryViewItem>> = MutableLiveData()
   private var queryViewItems: List<DiscoveryViewItem> = listOf()
 
+  val isSearchIsSelected : MutableLiveData<Boolean> = MutableLiveData()
+
   init {
+    getDiscoveryMovies()
+  }
+
+  /**
+   * Movie
+   */
+  private fun getDiscoveryMovies() {
     disposable.add(movieRepository.getDiscoveryMovies()
-      .map { model -> modelToView(model) }
+      .map { model -> movieModelToView(model) }
       .toList()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
@@ -32,18 +44,135 @@ class DiscoveryViewModel @Inject constructor(private val movieRepository: MovieR
   }
 
   fun getMovies(): MutableLiveData<List<DiscoveryViewItem>> {
-        return originalMovieList
-    }
+    return originalMovieList
+  }
 
-    private fun modelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
-        return DiscoveryViewItem(discoveryMovieModel.id,
-                discoveryMovieModel.title,
-                discoveryMovieModel.posterPath,
-                discoveryMovieModel.overview,
-                discoveryMovieModel.voteAverage.toString())
-    }
+  private fun movieModelToView(discoveryMovieModel: DiscoveryMovieModel): DiscoveryViewItem {
+    return DiscoveryViewItem(discoveryMovieModel.id,
+      discoveryMovieModel.title,
+      discoveryMovieModel.posterPath,
+      discoveryMovieModel.overview,
+      discoveryMovieModel.voteAverage.toString(),
+      discoveryMovieModel.genre,
+      discoveryMovieModel.releaseDate,
+      discoveryMovieModel.popularity)
+  }
 
-  fun search(query: CharSequence) {
+  /**
+   * Order list by selected type
+   */
+  override fun onTypeSelected(sortBy: String) {
+    when (sortBy) {
+      "Popularité" -> {
+        disposable.add(
+          Single.fromCallable {
+            return@fromCallable queryViewItems.sortedBy {
+              it.popularity
+            }
+          }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ views ->
+              originalMovieList.value = views
+            }) { throwable ->
+              Timber.e(throwable.message)
+            }
+        )
+      }
+      "Note" -> {
+        disposable.add(
+          Single.fromCallable {
+            return@fromCallable queryViewItems.sortedBy {
+              it.voteAverage
+            }
+          }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ views ->
+              originalMovieList.value = views
+            }) { throwable ->
+              Timber.e(throwable.message)
+            }
+        )
+      }
+      "Date de sortie" -> {
+        disposable.add(
+          Single.fromCallable {
+            return@fromCallable queryViewItems.sortedBy {
+              it.release_date
+            }
+          }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ views ->
+              originalMovieList.value = views
+            }) { throwable ->
+              Timber.e(throwable.message)
+            }
+        )
+      }
+      "Titre" ->
+        disposable.add(
+          Single.fromCallable {
+            return@fromCallable queryViewItems.sortedBy {
+              it.title
+            }
+          }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ views ->
+              originalMovieList.value = views
+            }) { throwable ->
+              Timber.e(throwable.message)
+            }
+        )
+    }
+  }
+
+  /**
+   * Select movie by year
+   */
+  override fun onYearSelected(year: Int) {
+    disposable.add(
+      Single.fromCallable {
+        return@fromCallable queryViewItems.filter {
+          getDateFormatted(it.release_date).contains(year.toString(), true)
+        }
+      }
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({ views ->
+          originalMovieList.value = views
+        }) { throwable ->
+          Timber.e(throwable.message)
+        }
+    )
+  }
+
+  /**
+   * Select movie by genre
+   */
+  override fun onGenreSelected(genre: Int) {
+    disposable.add(
+      Single.fromCallable {
+        return@fromCallable queryViewItems.filter {
+          it.genreId.contains(genre)
+        }
+      }
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({ views ->
+          originalMovieList.value = views
+        }) { throwable ->
+          Timber.e(throwable.message)
+        }
+    )
+  }
+
+  /**
+   * Search a movie (searchbar)
+   */
+  fun searchByQuery(query: CharSequence) {
     disposable.add(
       Single.fromCallable {
         return@fromCallable if (query.isNotEmpty()) {

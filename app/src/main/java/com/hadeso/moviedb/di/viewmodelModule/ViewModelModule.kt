@@ -6,6 +6,7 @@ import com.hadeso.moviedb.di.archModule.ViewModelKey
 import com.hadeso.moviedb.ui.discovery.DiscoveryViewModel
 import com.hadeso.moviedb.ui.home.HomeViewModel
 import com.hadeso.moviedb.ui.movie.MovieViewModel
+import com.hadeso.moviedb.ui.sortBy.SearchViewModel
 import com.hadeso.moviedb.viewmodel.MovieDBViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -34,6 +35,14 @@ abstract class ViewModelModule {
   @IntoMap
   @ViewModelKey(MovieViewModel::class)
   abstract fun bindMovieViewModel(movieViewModel: MovieViewModel): ViewModel
+
+  /**
+   * Search dialog
+   */
+  @Binds
+  @IntoMap
+  @ViewModelKey(SearchViewModel::class)
+  abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
 
   @Binds
   abstract fun bindViewModelFactory(factory: MovieDBViewModelFactory): ViewModelProvider.Factory

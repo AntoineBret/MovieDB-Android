@@ -9,5 +9,8 @@ data class DiscoveryViewItem(
         val title: String,
         val posterUrl: String,
         val overview: String,
-        val voteAverage: String
+        val voteAverage: String,
+        val genreId: IntArray,
+        val release_date: String,
+        val popularity: Float
 ) : Parcelable

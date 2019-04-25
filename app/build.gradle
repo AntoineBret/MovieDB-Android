@@ -7,7 +7,7 @@ android {
   compileSdkVersion 28
   defaultConfig {
     applicationId "com.hadeso.moviedb"
-    minSdkVersion 23
+    minSdkVersion 24
     targetSdkVersion 28
     versionCode 1
     versionName "1.0"
@@ -44,6 +44,9 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = '1.8'
   }
 }
 
